@@ -2,68 +2,77 @@
 <html>
 <head>
 <title>Intro Quiz</title>
+<link rel="stylesheet" href="CSS-Intro-Quiz.css">
 </head>
 <body>
 
+<div class="bereich">
 <h1>Intro Quiz</h1>
 <p>If you recognize the song, press the red button as quickly as possible. </p>
 <p>Then, 4 options will be displayed for 5 seconds. </p>
 <p>Click on the correct answer before time runs out. Have fun!</p>
+</div>
 
-<div style="display: flex;">
+<div class="bereich">
+<div style="display: flex;" class="player-input">
     <label>Enter your name: </label>
-    <input id="playerName" placeholder="z.B. Player111">
-    <button>add</button>
+    <input type="text" id="playerName" placeholder="e.g. Player111">
+    <button>Add</button>
 </div>
 
 <h2>Player-list</h2>
-<ul>
+
+<ul class="player-list">
 
 </ul>
-
-<div>
-    <p>
-        <strong>Score:</strong>
-        <span>0/10</span>
-    </p>
 </div>
 
-<audio controls>
+<div class="bereich">
+<audio class="audio-player" controls>
     Your browser does not support the audio tag.
 </audio>
 
-<button>!</button>
 
-<section hidden>
-        <div>
-            <button>Antwort 1</button>
-            <button>Antwort 2</button>
+<button class="buzz-button">!</button>
+
+
+<section class="answer-section" hidden>
+        <div class="answer-row">
+            <button class="answer-button"></button>
+            <button class="answer-button"></button>
         </div>
 
-        <h3>5</h3>
+        <h3 class="countdown">5</h3>
 
-        <div>
-            <button>Antwort 3</button>
-            <button>Antwort 4</button>
-        </div>
-
-    </section>
-
-<section hidden>
-        <h3>Wer hat gedrückt?</h3>
-        <div>
+        <div class="answer-row">
+            <button class="answer-button"></button>
+            <button class="answer-button"></button>
         </div>
 </section>
 
-    </section>
 
-<div style="display: flex;">
-    <button>back</button>
+<section class="player-select-section" hidden>
+        <h3>Wer hat gedrückt?</h3>
+        <div class="player-buttons">
+        </div>
+</section>
+
+<div class="navigation" style="display: flex;">
+    <button class="nav-button">Back</button>
     <p>
         <strong>Song:</strong>
         <span>1/10</span>
     </p>
-    <button>next</button>
+    <button class="nav-button">Next</button>
 </div>
+
+</div>
+
+<section class="ranking-section" hidden>
+    <h2>Ranking</h2>
+    <ol class="ranking-list">
+    </ol>
+</section>
+
 </body>
 </html>
