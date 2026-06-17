@@ -1,11 +1,11 @@
 const songs = [
     { file: "Songs/shape-of-you.mp3", title: "Shape of You" },
-    { file: "Songs\Incubus - Warning-trim.mp3", title: "Incubus" },
-    { file: "Songs\Justin Bieber, Nicki Minaj – Beauty And A Beat (Lyrics)-trim.mp3", title: "Beauty And A Beat" },
-    { file: "Songs\Rihanna - Work ft. Drake-trim.mp3", title: "Work" },
+    { file: "Songs/Incubus - Warning-trim.mp3", title: "Incubus" },
+    { file: "Songs/Justin Bieber, Nicki Minaj – Beauty And A Beat (Lyrics)-trim.mp3", title: "Beauty And A Beat" },
+    { file: "Songs/Rihanna - Work ft. Drake-trim.mp3", title: "Work" },
     { file: "Songs/PinkPantheress - Stateside + Zara Larsson (Official Audio)-trim.mp3", title: "Stateside + Zara Larsson" },
     { file: "Songs/Katy Perry - Last Friday Night (Lyrics)-trim.mp3", title: "Last Friday Night" },
-    { file: "Songs\Zedd, Maren Morris, Grey - The Middle (Lyric Video)-trim.mp3", title: "The Middle"},
+    { file: "Songs/Zedd, Maren Morris, Grey - The Middle (Lyric Video)-trim.mp3", title: "The Middle"},
     { file: "Songs/Dua Lipa - Break My Heart (Official Video)-trim.mp3", title: "Break My Heart"},
     { file: "Songs/Dominic Fike _Babydoll_ (Official Audio)-trim.mp3", title: "Babydoll"},
     { file: "Songs/Charlie Puth - Attention [Official Video]-trim.mp3", title: "Attention"},
@@ -29,6 +29,35 @@ function loadSong() {
     songCounter.textContent = `${currentSongIndex + 1}/${shuffledSongs.length}`;
 }
 
+const input = document.querySelector(".player-input input");
+const addButton = document.querySelector(".add-player");
+const playerList = document.querySelector(".player-list");
+
+const players = [];
+
+//Eine Liste von Player-Namen.
+addButton.addEventListener("click", () => {
+
+    const name = input.value.trim();
+
+    if (name === "") {
+        return;
+    }
+
+    players.push({
+        name: name,
+        score: 0
+    });
+
+    const li = document.createElement("li");
+
+    li.textContent = `${name} - 0 Punkte`;
+
+    playerList.appendChild(li);
+
+    input.value = "";
+});
+
 //Songs mischen + Start
 function startGame() {
     shuffledSongs = [...songs].sort(() => Math.random() - 0.5);
@@ -40,8 +69,21 @@ function startGame() {
 nextBtn.addEventListener("click", () => {
     currentSongIndex++;
 
-    if (currentSongIndex >= shuffledSongs.length) {
+    if (currentSongIndex >= shuffledSongs.length ) {
         alert("Game finished!");
+        return;
+    }
+
+    loadSong();
+});
+
+//Back Button
+backBtn.addEventListener("click", () => {
+
+    currentSongIndex--;
+
+    if (currentSongIndex < 0) {
+        currentSongIndex = 0;
         return;
     }
 
