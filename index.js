@@ -66,6 +66,14 @@ nextBtn.addEventListener("click", () => {
         return;
     }
     loadSong();
+
+    answerButtons.forEach(button => {
+        button.style.border = "";
+        button.disabled = false;
+    });
+    document.getElementById("answer-section").hidden = true;
+    countdown.textContent = "";
+
     buzzBtn.disabled = false;
 });
 
@@ -77,7 +85,14 @@ backBtn.addEventListener("click", () => {
         return;
     }
     loadSong();
-    buzzBtn.disabled = false;;
+
+    document.getElementById("answer-section").hidden = true;
+    answerButtons.forEach(button => {
+        button.style.border = "";
+        button.disabled = false;
+    });
+    countdown.textContent = "";
+    buzzBtn.disabled = false;
 });
 
 //Button ! click
@@ -108,9 +123,12 @@ function startCountdown() {
 }
 
 let correctAnswer = "";
+let answerClicked = false;
 
 //Answers zeigen
 function showAnswers() {
+    answerClicked = false;
+    answerButtons.forEach(button => { button.style.border = ""; button.disabled = false;});
 
     const answerSection = document.getElementById("answer-section");
     answerSection.hidden = false;
@@ -155,6 +173,16 @@ const playerSelectSection = document.querySelector(".player-select-section");
 
 //Answer richtig/falsh
 function checkAnswer(clickedButton) {
+    if (answerClicked) {
+        return;
+    }
+    answerClicked = true;
+    answerButtons.forEach(button => {
+        button.disabled = true;
+    });
+
+    clearInterval(timer);
+    countdown.textContent = "";
 
     wasCorrect = clickedButton.textContent === correctAnswer;
     answerButtons.forEach(button => {
@@ -199,7 +227,7 @@ function updatePlayerList() {
         const li =
             document.createElement("li");
         li.textContent =
-            `${player.name} - ${player.score} Punkte`;
+            `${player.name} - ${player.score} points`;
         playerList.appendChild(li);
     });
 }
