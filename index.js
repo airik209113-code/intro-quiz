@@ -24,7 +24,6 @@ let currentSongIndex = 0;
 //Songs laden
 function loadSong() {
     const song = shuffledSongs[currentSongIndex];
-
     audioPlayer.src = song.file;
     songCounter.textContent = `${currentSongIndex + 1}/${shuffledSongs.length}`;
 }
@@ -35,26 +34,18 @@ const playerList = document.querySelector(".player-list");
 
 const players = [];
 
-//Eine Liste von Player-Namen.
+//Liste von Player-Namen
 addButton.addEventListener("click", () => {
 
     const name = input.value.trim();
-
     if (name === "") {
         return;
     }
-
     players.push({
         name: name,
         score: 0
     });
-
-    const li = document.createElement("li");
-
-    li.textContent = `${name} - 0 Punkte`;
-
-    playerList.appendChild(li);
-
+   updatePlayerList(); 
     input.value = "";
 });
 
@@ -90,4 +81,85 @@ backBtn.addEventListener("click", () => {
     loadSong();
 });
 
-startGame();
+//Button ! click
+const buzzBtn = document.querySelector(".buzz-button");
+const answerButtons = document.querySelectorAll(".answer-button");
+
+buzzBtn.addEventListener("click", () => {
+    showAnswers();
+});
+
+function startCountdown() {
+
+    let time = 5;
+    countdown.textContent = time;
+    const timer = setInterval(() => {
+        time--;
+        countdown.textContent = time;
+        if (time <= 0) {
+            clearInterval(timer);
+            document.getElementById("answer-section").hidden = true;
+        }
+    }, 1000);
+}
+
+//Countdown
+const countdown = document.querySelector(".countdown");
+
+let correctAnswer = "";
+
+//Answers zeigen
+function showAnswers() {
+
+    const answerSection = document.getElementById("answer-section");
+    answerSection.hidden = false;
+    const currentSong = shuffledSongs[currentSongIndex];
+    correctAnswer = currentSong.title;
+
+    // Alle falschen Songs sammeln
+    const wrongAnswers = songs
+        .filter(song => song.title !== correctAnswer)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+
+    // Richtige + falsche Antwort
+    const answers = [
+        correctAnswer,
+        wrongAnswers[0].title,
+        wrongAnswers[1].title,
+        wrongAnswers[2].title
+    ];
+
+    // Antworten nochmal mischen
+    answers.sort(() => Math.random() - 0.5);
+
+    // Auf die 4 Buttons schreiben
+    answerButtons.forEach((button, index) => {
+        button.textContent = answers[index];
+    });
+
+    startCountdown();
+}
+
+//Answer richtig/falsh
+answerButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        checkAnswer(button);
+
+    });
+});
+
+function checkAnswer(clickedButton) {
+
+    console.log("Geklickt:", clickedButton.textContent);
+    console.log("Richtig:", correctAnswer);
+    answerButtons.forEach(button => {
+        if (button.textContent === correctAnswer) {
+            button.style.border = "4px solid green";
+        }
+    });
+
+    if (clickedButton.textContent !== correctAnswer) {
+        clickedButton.style.border = "4px solid red";
+    }
+}
