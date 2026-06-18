@@ -55,7 +55,7 @@ addButton.addEventListener("click", () => {
 
 //Songs mischen + Start
 function startGame() {
-    shuffledSongs = [...songs].sort(() => Math.random() - 0.5);
+    shuffledSongs = [...songs].sort(() => Math.random() - 0.5).slice(0, 10);
     currentSongIndex = 0;
     loadSong();
     buzzBtn.disabled = false;
@@ -67,6 +67,7 @@ nextBtn.addEventListener("click", () => {
 
     if (currentSongIndex >= shuffledSongs.length ) {
         alert("Game finished!");
+        showRanking();
         return;
     }
     loadSong();
@@ -182,9 +183,19 @@ function checkAnswer(clickedButton) {
     }
 
     setTimeout(() => {
-        document
-            .querySelector(".player-select-section")
-            .hidden = false;
+        if (players.length === 0) {
+            return;
+        }
+        if (players.length === 1) {
+            if (wasCorrect) {
+                players[0].score++;
+            } else {
+                players[0].score--;
+            }
+            updatePlayerList();
+            return;
+        }
+        playerSelectSection.hidden = false;
         showPlayerButtons();
     }, 1500);
 }
