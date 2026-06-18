@@ -11,6 +11,10 @@ const songs = [
     { file: "Songs/Charlie Puth - Attention [Official Video]-trim.mp3", title: "Attention"},
     { file: "Songs/Calvin Harris - Feels (Official Video) ft. Pharrell Williams, Katy Perry, Big Sean-trim.mp3", title: "Feels"},
     { file: "Songs/Billie Eilish - ocean eyes (Official Music Video)-trim.mp3", title: "ocean eyes"},
+    { file: "Songs/Mabel - Mad Love (Official Video)-trim.mp3", title: "Mad Love"},
+    { file: "Songs/Bruno Mars - That’s What I Like [Official Music Video]-trim.mp3", title: "That’s What I Like"},
+    { file: "Songs/Lady Gaga, Bruno Mars - Die With A Smile (Official Music Video)-trim.mp3", title: "Die With A Smile"},
+    { file: "Songs/Lady Gaga - Bad Romance (Official Music Video)-trim.mp3", tile: "Bad Romance"},
 ];
 
 const audioPlayer = document.querySelector(".audio-player");
