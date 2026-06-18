@@ -54,6 +54,7 @@ function startGame() {
     shuffledSongs = [...songs].sort(() => Math.random() - 0.5);
     currentSongIndex = 0;
     loadSong();
+    buzzBtn.disabled = false;
 }
 
 //Next Button
@@ -64,21 +65,19 @@ nextBtn.addEventListener("click", () => {
         alert("Game finished!");
         return;
     }
-
     loadSong();
+    buzzBtn.disabled = false;
 });
 
 //Back Button
 backBtn.addEventListener("click", () => {
-
     currentSongIndex--;
-
     if (currentSongIndex < 0) {
         currentSongIndex = 0;
         return;
     }
-
     loadSong();
+    buzzBtn.disabled = false;;
 });
 
 //Button ! click
@@ -86,14 +85,19 @@ const buzzBtn = document.querySelector(".buzz-button");
 const answerButtons = document.querySelectorAll(".answer-button");
 
 buzzBtn.addEventListener("click", () => {
+    buzzBtn.disabled = true;
     showAnswers();
 });
 
-function startCountdown() {
+//Countdown
+const countdown = document.querySelector(".countdown");
 
+let timer;
+function startCountdown() {
+    clearInterval(timer);
     let time = 5;
     countdown.textContent = time;
-    const timer = setInterval(() => {
+    timer = setInterval(() => {
         time--;
         countdown.textContent = time;
         if (time <= 0) {
@@ -102,9 +106,6 @@ function startCountdown() {
         }
     }, 1000);
 }
-
-//Countdown
-const countdown = document.querySelector(".countdown");
 
 let correctAnswer = "";
 
@@ -134,32 +135,73 @@ function showAnswers() {
     answers.sort(() => Math.random() - 0.5);
 
     // Auf die 4 Buttons schreiben
-    answerButtons.forEach((button, index) => {
-        button.textContent = answers[index];
-    });
+    for(let i = 0; i < answerButtons.length; i++) {
+    answerButtons[i].textContent = answers[i];
+    }
 
     startCountdown();
 }
 
-//Answer richtig/falsh
 answerButtons.forEach(button => {
     button.addEventListener("click", () => {
         checkAnswer(button);
-
     });
 });
 
+let wasCorrect = false;
+
+const playerButtonsContainer = document.querySelector(".player-buttons");
+const playerSelectSection = document.querySelector(".player-select-section");
+
+//Answer richtig/falsh
 function checkAnswer(clickedButton) {
 
-    console.log("Geklickt:", clickedButton.textContent);
-    console.log("Richtig:", correctAnswer);
+    wasCorrect = clickedButton.textContent === correctAnswer;
     answerButtons.forEach(button => {
         if (button.textContent === correctAnswer) {
             button.style.border = "4px solid green";
         }
     });
 
-    if (clickedButton.textContent !== correctAnswer) {
+    if (!wasCorrect) {
         clickedButton.style.border = "4px solid red";
     }
+
+    setTimeout(() => {
+        document
+            .querySelector(".player-select-section")
+            .hidden = false;
+        renderPlayerButtons();
+    }, 1500);
 }
+
+//Wer hat gedrückt?
+function renderPlayerButtons() {
+
+    playerButtonsContainer.innerHTML = "";
+    players.forEach(player => {
+        const btn = document.createElement("button");
+        btn.textContent = player.name;
+        btn.addEventListener("click", () => {
+            if (wasCorrect) {
+                player.score++;
+            }
+            updatePlayerList();
+            playerSelectSection.hidden = true;
+        });
+        playerButtonsContainer.appendChild(btn);
+    });
+}
+
+function updatePlayerList() {
+    playerList.innerHTML = "";
+    players.forEach(player => {
+        const li =
+            document.createElement("li");
+        li.textContent =
+            `${player.name} - ${player.score} Punkte`;
+        playerList.appendChild(li);
+    });
+}
+
+startGame();
