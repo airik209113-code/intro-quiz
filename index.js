@@ -104,24 +104,6 @@ buzzBtn.addEventListener("click", () => {
     showAnswers();
 });
 
-//Countdown
-const countdown = document.querySelector(".countdown");
-
-let timer;
-function startCountdown() {
-    clearInterval(timer);
-    let time = 5;
-    countdown.textContent = time;
-    timer = setInterval(() => {
-        time--;
-        countdown.textContent = time;
-        if (time <= 0) {
-            clearInterval(timer);
-            document.getElementById("answer-section").hidden = true;
-        }
-    }, 1000);
-}
-
 let correctAnswer = "";
 let answerClicked = false;
 
@@ -199,12 +181,12 @@ function checkAnswer(clickedButton) {
         document
             .querySelector(".player-select-section")
             .hidden = false;
-        renderPlayerButtons();
+        showPlayerButtons();
     }, 1500);
 }
 
 //Wer hat gedrückt?
-function renderPlayerButtons() {
+function showPlayerButtons() {
 
     playerButtonsContainer.innerHTML = "";
     players.forEach(player => {
@@ -213,6 +195,8 @@ function renderPlayerButtons() {
         btn.addEventListener("click", () => {
             if (wasCorrect) {
                 player.score++;
+            } else {
+                player.score--;
             }
             updatePlayerList();
             playerSelectSection.hidden = true;
@@ -221,13 +205,34 @@ function renderPlayerButtons() {
     });
 }
 
+//Countdown
+const countdown = document.querySelector(".countdown");
+
+let timer;
+function startCountdown() {
+    clearInterval(timer);
+    let time = 5;
+    countdown.textContent = time;
+    timer = setInterval(() => {
+        time--;
+        countdown.textContent = time;
+        if (time <= 0) {
+            wasCorrect = false;
+            clearInterval(timer);
+            document.getElementById("answer-section").hidden = true;
+            playerSelectSection.hidden = false;
+            showPlayerButtons();
+        }
+    }, 1000);
+}
+
 function updatePlayerList() {
     playerList.innerHTML = "";
     players.forEach(player => {
         const li =
             document.createElement("li");
         li.textContent =
-            `${player.name} - ${player.score} points`;
+            `${player.name}: ${player.score} points`;
         playerList.appendChild(li);
     });
 }
