@@ -1,7 +1,7 @@
 const songs = [
     { file: "Songs/shape-of-you.mp3", title: "Shape of You" },
     { file: "Songs/Incubus - Warning-trim.mp3", title: "Incubus" },
-    { file: "Songs/Justin Bieber, Nicki Minaj – Beauty And A Beat (Lyrics)-trim.mp3", title: "Beauty And A Beat" },
+    { file: "Songs/Justin Bieber, Nicki Minaj - Beauty And A Beat (Lyrics)-trim.mp3", title: "Beauty And A Beat" },
     { file: "Songs/Rihanna - Work ft. Drake-trim.mp3", title: "Work" },
     { file: "Songs/PinkPantheress - Stateside + Zara Larsson (Official Audio)-trim.mp3", title: "Stateside + Zara Larsson" },
     { file: "Songs/Katy Perry - Last Friday Night (Lyrics)-trim.mp3", title: "Last Friday Night" },
@@ -12,9 +12,9 @@ const songs = [
     { file: "Songs/Calvin Harris - Feels (Official Video) ft. Pharrell Williams, Katy Perry, Big Sean-trim.mp3", title: "Feels"},
     { file: "Songs/Billie Eilish - ocean eyes (Official Music Video)-trim.mp3", title: "ocean eyes"},
     { file: "Songs/Mabel - Mad Love (Official Video)-trim.mp3", title: "Mad Love"},
-    { file: "Songs/Bruno Mars - That’s What I Like [Official Music Video]-trim.mp3", title: "That’s What I Like"},
+    { file: "Songs/Bruno Mars - That's What I Like [Official Music Video]-trim.mp3", title: "That's What I Like"},
     { file: "Songs/Lady Gaga, Bruno Mars - Die With A Smile (Official Music Video)-trim.mp3", title: "Die With A Smile"},
-    { file: "Songs/Lady Gaga - Bad Romance (Official Music Video)-trim.mp3", tile: "Bad Romance"},
+    { file: "Songs/Lady Gaga - Bad Romance (Official Music Video)-trim.mp3", title: "Bad Romance"},
 ];
 
 const audioPlayer = document.querySelector(".audio-player");
@@ -24,6 +24,9 @@ const songCounter = document.querySelector(".navigation span");
 
 let shuffledSongs = [];
 let currentSongIndex = 0;
+
+let roundFinished = false;
+let answerLocked = false;
 
 //Songs laden
 function loadSong() {
@@ -53,6 +56,16 @@ addButton.addEventListener("click", () => {
     input.value = "";
 });
 
+function soloPlayer() {
+    if (players.length === 0) {
+        players.push({
+            name: "Player 1",
+            score: 0
+        });
+        updatePlayerList();
+    }
+}
+
 //Songs mischen + Start
 function startGame() {
     shuffledSongs = [...songs].sort(() => Math.random() - 0.5).slice(0, 10);
@@ -63,39 +76,46 @@ function startGame() {
 
 //Next Button
 nextBtn.addEventListener("click", () => {
+    if (!roundFinished) return;
+
     currentSongIndex++;
 
-    if (currentSongIndex >= shuffledSongs.length ) {
+    if (currentSongIndex >= shuffledSongs.length) {
         alert("Game finished!");
         showRanking();
         return;
     }
+
     loadSong();
 
     answerButtons.forEach(button => {
         button.style.border = "";
         button.disabled = false;
+        button.textContent = "";
     });
+
     document.getElementById("answer-section").hidden = true;
     countdown.textContent = "";
 
     buzzBtn.disabled = false;
+    roundFinished = false; // reset
+    answerLocked = false;
 });
 
 //Back Button
 backBtn.addEventListener("click", () => {
     currentSongIndex--;
-    if (currentSongIndex < 0) {
-        currentSongIndex = 0;
-        return;
-    }
+    if (currentSongIndex < 0) currentSongIndex = 0;
+
     loadSong();
 
     document.getElementById("answer-section").hidden = true;
     answerButtons.forEach(button => {
         button.style.border = "";
         button.disabled = false;
+        button.textContent = "";
     });
+
     countdown.textContent = "";
     buzzBtn.disabled = false;
 });
@@ -105,6 +125,7 @@ const buzzBtn = document.querySelector(".buzz-button");
 const answerButtons = document.querySelectorAll(".answer-button");
 
 buzzBtn.addEventListener("click", () => {
+    soloPlayer();
     buzzBtn.disabled = true;
     showAnswers();
 });
@@ -112,8 +133,11 @@ buzzBtn.addEventListener("click", () => {
 let correctAnswer = "";
 let answerClicked = false;
 
+let canGoNext = false;
+
 //Answers zeigen
 function showAnswers() {
+    roundFinished = false;
     answerClicked = false;
     answerButtons.forEach(button => { button.style.border = ""; button.disabled = false;});
 
@@ -182,6 +206,8 @@ function checkAnswer(clickedButton) {
         clickedButton.style.border = "4px solid red";
     }
 
+    roundFinished = true;
+
     setTimeout(() => {
         if (players.length === 0) {
             return;
@@ -198,6 +224,8 @@ function checkAnswer(clickedButton) {
         playerSelectSection.hidden = false;
         showPlayerButtons();
     }, 1500);
+
+    canGoNext = true
 }
 
 //Wer hat gedrückt?
@@ -234,6 +262,7 @@ function startCountdown() {
         if (time <= 0) {
             wasCorrect = false;
             clearInterval(timer);
+            roundFinished = true;
             document.getElementById("answer-section").hidden = true;
             playerSelectSection.hidden = false;
             showPlayerButtons();
@@ -241,6 +270,7 @@ function startCountdown() {
     }, 1000);
 }
 
+//updaten
 function updatePlayerList() {
     playerList.innerHTML = "";
     players.forEach(player => {
@@ -249,6 +279,21 @@ function updatePlayerList() {
         li.textContent =
             `${player.name}: ${player.score} points`;
         playerList.appendChild(li);
+    });
+}
+
+//Ranking
+const rankingSection = document.querySelector(".ranking-section");
+const rankingList = document.querySelector(".ranking-list");
+function showRanking() {
+    rankingSection.hidden = false;
+    rankingList.innerHTML = "";
+    const sortedPlayers = [...players];
+    sortedPlayers.sort((a, b) => b.score - a.score);
+    sortedPlayers.forEach(player => {
+        const li = document.createElement("li");
+        li.textContent = `${player.name} - ${player.score} Punkte`;
+        rankingList.appendChild(li);
     });
 }
 
