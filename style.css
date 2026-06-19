@@ -1,6 +1,6 @@
 body {
     font-family: Lucida Console, sans-serif;
-    max-width: 1000px;
+    max-width: 1050px;
     margin: 0 auto;
     padding: 20px;
     background-image: url('https://wallpapercave.com/wp/wp2564578.jpg');
@@ -26,6 +26,10 @@ h2 {
 
 h3 {
     font-size: 20px;
+}
+
+label {
+    margin-top: 8px;
 }
 
 .player-input {
