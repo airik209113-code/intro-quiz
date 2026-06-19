@@ -3,8 +3,11 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgb(40, 55, 90);
-    color: rgb(34, 34, 34);
+    background-image: url('https://wallpapercave.com/wp/wp2564578.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: rgba(34, 34, 34, 0.89);
 }
 
 h1, h2, h3, p {
